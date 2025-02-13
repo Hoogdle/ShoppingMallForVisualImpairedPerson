@@ -1,10 +1,12 @@
 package com.example.unifiedshoppingmall
 
+import android.R.attr.fontFamily
 import android.R.attr.label
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,8 +25,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.unifiedshoppingmall.ui.theme.UnifiedShoppingMallTheme
 
 class MainActivity : ComponentActivity() {
@@ -43,10 +49,12 @@ class MainActivity : ComponentActivity() {
         )
         setContent {
             Scaffold(
+                containerColor = Color.Black,
                 modifier = Modifier
                     .fillMaxSize(),
                 bottomBar = {
-                    NavigationBar {
+                    NavigationBar(
+                        containerColor = Color.Black,) {
                         navItemList.forEachIndexed { index, navItem ->
                             NavigationBarItem(
                                 selected = true,
@@ -60,6 +68,9 @@ class MainActivity : ComponentActivity() {
                                 label = {
                                     Text(
                                         text = navItem.label,
+                                        fontSize = 16.sp,
+                                        fontFamily = FontFamily(Font(R.font.main_bold)),
+                                        color = Color.White
                                         )
                                 },
                             )

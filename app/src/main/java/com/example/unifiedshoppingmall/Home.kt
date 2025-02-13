@@ -7,20 +7,36 @@ import android.R.attr.textStyle
 import android.R.attr.translationX
 import android.R.attr.translationY
 import android.icu.text.CaseMap
+import android.util.Log.w
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.OutlinedTextField
@@ -35,6 +51,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -56,10 +73,26 @@ import com.example.unifiedshoppingmall.ui.theme.MainBlue
 import com.example.unifiedshoppingmall.ui.theme.MainBlueDark
 import java.nio.file.Files.size
 
+val p1 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p2 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p3 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p4 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p5 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p6 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p7 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p8 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p9 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p10 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p11 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p12 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p13 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
 
+
+val productList = listOf<Product>(p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13)
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    scrollState: ScrollState
 ){
     Column(
         modifier = Modifier
@@ -69,8 +102,11 @@ fun HomeScreen(
         Column(
             modifier = Modifier
                 .padding(all = 10.dp)
+                .verticalScroll(scrollState)
         ) {
             SearchBar()
+            PopularProducts(modifier = Modifier, productList)
+            RecommendProducts(modifier = Modifier, productList)
         }
     }
 
@@ -88,7 +124,8 @@ fun UpperNotification(
     {
         Text(
             text = "홈 화면 입니다. 인기 상품과 추천 상품을 조회할 수 있습니다.",
-            modifier = Modifier.border(
+            modifier = Modifier
+                .border(
                 border = BorderStroke(
                     width = 4.dp,
                     color = MainBlue),
@@ -96,7 +133,8 @@ fun UpperNotification(
             )
                 .padding(6.dp),
             fontSize = 30.sp,
-            fontFamily = FontFamily(Font(R.font.main_bold))
+            fontFamily = FontFamily(Font(R.font.main_bold)),
+            color = Color.White
         )
     }
 }
@@ -162,6 +200,127 @@ fun SearchBar(){
 
 
 @Composable
+fun PopularProducts(
+    modifier: Modifier = Modifier,
+    Products: List<Product>
+){
+    Column (modifier = Modifier
+        .fillMaxWidth()
+        .padding(
+            horizontal = 6.dp,
+            vertical = 6.dp
+        ),
+    ){
+        Box(
+            modifier = Modifier
+                .background(MainBlue)
+                .height(50.dp)
+                .fillMaxWidth()
+        ){
+            Text(
+                text = "인기상품",
+                fontFamily = FontFamily(Font(R.font.main_bold)),
+                fontSize = 30.sp,
+                color = Color.White
+            )
+        }
+        LazyRow(){
+            items(items = Products){ item ->
+                Column(modifier = Modifier
+                    .clickable(onClick = {})
+                    .border(
+                        width = 5.dp,
+                        color = MainBlue,
+                        shape = RectangleShape
+                    )
+                    .size(width = 150.dp, height = 250.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ){
+                    Text(
+                        text = item.name,
+                        color = Color.White,
+                        fontFamily = FontFamily(Font(R.font.main_bold)),
+                        fontSize = 30.sp
+                    )
+                    Text(
+                        text = item.price,
+                        color = Color.White,
+                        fontFamily = FontFamily(Font(R.font.main_bold)),
+                        fontSize = 30.sp
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun RecommendProducts(
+    modifier: Modifier = Modifier,
+    Products: List<Product>
+){
+    Column (modifier = Modifier
+        .fillMaxWidth()
+        .padding(
+            horizontal = 6.dp,
+            vertical = 6.dp
+        ),
+    ){
+        Box(
+            modifier = Modifier
+                .background(MainBlue)
+                .height(50.dp)
+                .fillMaxWidth()
+        ){
+            Text(
+                text = "추천상품",
+                fontFamily = FontFamily(Font(R.font.main_bold)),
+                fontSize = 30.sp,
+                color = Color.White
+            )
+        }
+        LazyRow(){
+            items(items = Products){ item ->
+                Column(modifier = Modifier
+                    .clickable(onClick = {})
+                    .border(
+                        width = 5.dp,
+                        color = MainBlue,
+                        shape = RectangleShape
+                    )
+                    .size(width = 150.dp, height = 250.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ){
+                    Text(
+                        text = item.name,
+                        color = Color.White,
+                        fontFamily = FontFamily(Font(R.font.main_bold)),
+                        fontSize = 30.sp
+                    )
+                    Text(
+                        text = item.price,
+                        color = Color.White,
+                        fontFamily = FontFamily(Font(R.font.main_bold)),
+                        fontSize = 30.sp
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun ProductInfo(
+    modifier: Modifier = Modifier
+){
+
+}
+
+
+@Composable
 fun PinchToZoomView(
     modifier: Modifier,
 ) {
@@ -178,6 +337,8 @@ fun PinchToZoomView(
 
     // Coefficient for slowing down movement
     val slowMovement = 0.5f
+
+    val scrollState = rememberScrollState()
 
     // Box composable containing the image
     Box(
@@ -237,6 +398,6 @@ fun PinchToZoomView(
             }
     ) {
         // Image to be displayed with pinch-to-zoom functionality
-        HomeScreen()
+        HomeScreen(modifier = Modifier, scrollState = scrollState)
     }
 }
