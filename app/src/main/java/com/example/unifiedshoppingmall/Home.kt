@@ -73,44 +73,116 @@ import com.example.unifiedshoppingmall.ui.theme.MainBlue
 import com.example.unifiedshoppingmall.ui.theme.MainBlueDark
 import java.nio.file.Files.size
 
-val p1 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
-val p2 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
-val p3 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
-val p4 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
-val p5 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
-val p6 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
-val p7 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
-val p8 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
-val p9 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
-val p10 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
-val p11 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
-val p12 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
-val p13 = Product(name = "애플망고", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p1 = Product(name = "A", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p2 = Product(name = "B", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p3 = Product(name = "C", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p4 = Product(name = "D", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p5 = Product(name = "E", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p6 = Product(name = "F", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p7 = Product(name = "G", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p8 = Product(name = "H", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p9 = Product(name = "I", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p10 = Product(name = "J", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p11 = Product(name = "K", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p12 = Product(name = "L", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
+val p13 = Product(name = "M", price = " 12,500원", review = "4.5", shop = "쿠팡", deliveryDate = "내일 오전")
 
 
 val productList = listOf<Product>(p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13)
+
 @Composable
-fun HomeScreen(
-    modifier: Modifier = Modifier,
-    scrollState: ScrollState
-){
-    Column(
-        modifier = Modifier
-            .padding(all = 10.dp)
+fun Home(
+    modifier: Modifier,
+) {
+    // Mutable state variables to hold scale and offset values
+    var scale by remember { mutableStateOf(1f) }
+    var offsetX by remember { mutableStateOf(0f) }
+    var offsetY by remember { mutableStateOf(0f) }
+
+    val minScale = 1f
+    val maxScale = 4f
+
+    // Remember the initial offset
+    var initialOffset by remember { mutableStateOf(Offset(0f, 0f)) }
+
+    // Coefficient for slowing down movement
+    val slowMovement = 0.5f
+
+    val scrollState = rememberScrollState()
+
+    // Box composable containing the image
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .pointerInput(Unit) {
+                detectTransformGestures { _, pan, zoom, _ ->
+                    // Update scale with the zoom
+                    val newScale = scale * zoom
+                    scale = newScale.coerceIn(minScale, maxScale)
+
+                    // Calculate new offsets based on zoom and pan
+                    val centerX = size.width / 2
+                    val centerY = size.height / 2
+                    val offsetXChange = (centerX - offsetX) * (newScale / scale - 1)
+                    val offsetYChange = (centerY - offsetY) * (newScale / scale - 1)
+
+                    // Calculate min and max offsets
+                    val maxOffsetX = (size.width / 2) * (scale - 1)
+                    val minOffsetX = -maxOffsetX
+                    val maxOffsetY = (size.height / 2) * (scale - 1)
+                    val minOffsetY = -maxOffsetY
+
+                    // Update offsets while ensuring they stay within bounds
+                    if (scale * zoom <= maxScale) {
+                        offsetX = (offsetX + pan.x * scale * slowMovement + offsetXChange)
+                            .coerceIn(minOffsetX, maxOffsetX)
+                        offsetY = (offsetY + pan.y * scale * slowMovement + offsetYChange)
+                            .coerceIn(minOffsetY, maxOffsetY)
+                    }
+
+                    // Store initial offset on pan
+                    if (pan != Offset(0f, 0f) && initialOffset == Offset(0f, 0f)) {
+                        initialOffset = Offset(offsetX, offsetY)
+                    }
+                }
+            }
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onDoubleTap = {
+                        // Reset scale and offset on double tap
+                        if (scale != 1f) {
+                            scale = 1f
+                            offsetX = initialOffset.x
+                            offsetY = initialOffset.y
+                        } else {
+                            scale = 2f
+                        }
+                    }
+                )
+            }
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+                translationX = offsetX
+                translationY = offsetY
+            }
     ) {
-        UpperNotification()
+        // Image to be displayed with pinch-to-zoom functionality
         Column(
             modifier = Modifier
-                .padding(all = 10.dp)
-                .verticalScroll(scrollState)
+                .padding(all = 15.dp)
         ) {
-            SearchBar()
-            PopularProducts(modifier = Modifier, productList)
-            RecommendProducts(modifier = Modifier, productList)
+            UpperNotification()
+            Column(
+                modifier = Modifier
+                    .verticalScroll(scrollState)
+            ) {
+                SearchBar()
+                PopularProducts(modifier = Modifier, productList)
+                RecommendProducts(modifier = Modifier, productList)
+            }
         }
     }
-
-
 }
 
 @Composable
@@ -138,7 +210,6 @@ fun UpperNotification(
         )
     }
 }
-
 
 @Composable
 fun SearchBar(){
@@ -170,34 +241,6 @@ fun SearchBar(){
         textStyle = TextStyle.Default.copy(fontSize = 30.sp)
     )
 }
-
-//@Composable
-//fun CategoryButton(
-//    modifier: Modifier = Modifier
-//){
-//    Button(
-//        onClick = {/*TODO*/},
-//        shape = RoundedCornerShape(5.dp),
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(horizontal = 4.dp)
-//            .height(95.dp)
-//            .padding(vertical = 5.dp),
-//        colors = ButtonColors(
-//            containerColor = MainBlue,
-//            contentColor = Color.White,
-//            disabledContainerColor = MainBlue,
-//            disabledContentColor = Color.White),
-//        ){
-//        Text(
-//            text = "카테고리 목록",
-//            fontSize = 40.sp,
-//            fontFamily = FontFamily(Font(R.font.main_bold))
-//        )
-//    }
-//}
-
-
 
 @Composable
 fun PopularProducts(
@@ -312,92 +355,5 @@ fun RecommendProducts(
 }
 
 
-@Composable
-fun ProductInfo(
-    modifier: Modifier = Modifier
-){
-
-}
 
 
-@Composable
-fun PinchToZoomView(
-    modifier: Modifier,
-) {
-    // Mutable state variables to hold scale and offset values
-    var scale by remember { mutableStateOf(1f) }
-    var offsetX by remember { mutableStateOf(0f) }
-    var offsetY by remember { mutableStateOf(0f) }
-
-    val minScale = 1f
-    val maxScale = 4f
-
-    // Remember the initial offset
-    var initialOffset by remember { mutableStateOf(Offset(0f, 0f)) }
-
-    // Coefficient for slowing down movement
-    val slowMovement = 0.5f
-
-    val scrollState = rememberScrollState()
-
-    // Box composable containing the image
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .pointerInput(Unit) {
-                detectTransformGestures { _, pan, zoom, _ ->
-                    // Update scale with the zoom
-                    val newScale = scale * zoom
-                    scale = newScale.coerceIn(minScale, maxScale)
-
-                    // Calculate new offsets based on zoom and pan
-                    val centerX = size.width / 2
-                    val centerY = size.height / 2
-                    val offsetXChange = (centerX - offsetX) * (newScale / scale - 1)
-                    val offsetYChange = (centerY - offsetY) * (newScale / scale - 1)
-
-                    // Calculate min and max offsets
-                    val maxOffsetX = (size.width / 2) * (scale - 1)
-                    val minOffsetX = -maxOffsetX
-                    val maxOffsetY = (size.height / 2) * (scale - 1)
-                    val minOffsetY = -maxOffsetY
-
-                    // Update offsets while ensuring they stay within bounds
-                    if (scale * zoom <= maxScale) {
-                        offsetX = (offsetX + pan.x * scale * slowMovement + offsetXChange)
-                            .coerceIn(minOffsetX, maxOffsetX)
-                        offsetY = (offsetY + pan.y * scale * slowMovement + offsetYChange)
-                            .coerceIn(minOffsetY, maxOffsetY)
-                    }
-
-                    // Store initial offset on pan
-                    if (pan != Offset(0f, 0f) && initialOffset == Offset(0f, 0f)) {
-                        initialOffset = Offset(offsetX, offsetY)
-                    }
-                }
-            }
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onDoubleTap = {
-                        // Reset scale and offset on double tap
-                        if (scale != 1f) {
-                            scale = 1f
-                            offsetX = initialOffset.x
-                            offsetY = initialOffset.y
-                        } else {
-                            scale = 2f
-                        }
-                    }
-                )
-            }
-            .graphicsLayer {
-                scaleX = scale
-                scaleY = scale
-                translationX = offsetX
-                translationY = offsetY
-            }
-    ) {
-        // Image to be displayed with pinch-to-zoom functionality
-        HomeScreen(modifier = Modifier, scrollState = scrollState)
-    }
-}

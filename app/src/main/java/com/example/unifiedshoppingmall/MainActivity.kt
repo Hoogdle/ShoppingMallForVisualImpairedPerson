@@ -24,13 +24,19 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key.Companion.Home
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.unifiedshoppingmall.ui.theme.MainBlue
 import com.example.unifiedshoppingmall.ui.theme.UnifiedShoppingMallTheme
 
 class MainActivity : ComponentActivity() {
@@ -48,6 +54,10 @@ class MainActivity : ComponentActivity() {
             NavItem(label = "장바구니", icon = Icons.Default.ShoppingCart)
         )
         setContent {
+            var selectedIndex by remember{
+                mutableStateOf(0)
+            }
+
             Scaffold(
                 containerColor = Color.Black,
                 modifier = Modifier
@@ -57,18 +67,22 @@ class MainActivity : ComponentActivity() {
                         containerColor = Color.Black,) {
                         navItemList.forEachIndexed { index, navItem ->
                             NavigationBarItem(
-                                selected = true,
-                                onClick = {},
+                                selected = selectedIndex == index,
+                                onClick = {
+                                    selectedIndex = index
+                                },
                                 icon = {
                                     Icon(
                                         imageVector = navItem.icon,
                                         contentDescription = null,
-                                        modifier = Modifier.size(40.dp))
+                                        modifier = Modifier.size(35.dp),
+                                        tint = MainBlue
+                                    )
                                 },
                                 label = {
                                     Text(
                                         text = navItem.label,
-                                        fontSize = 16.sp,
+                                        fontSize = 12.sp,
                                         fontFamily = FontFamily(Font(R.font.main_bold)),
                                         color = Color.White
                                         )
@@ -79,7 +93,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             ) { innerPadding ->
-                PinchToZoomView(modifier = Modifier.padding(innerPadding))
+                ContentScreen(modifier = Modifier.padding(innerPadding),selectedIndex)
             }
         }
     }
@@ -88,7 +102,15 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ContentScreen(
-    modifier: Modifier = Modifier
-){
-
+    modifier: Modifier = Modifier,
+    seletedIndex: Int,
+) {
+    when(seletedIndex){
+        0 -> Home(modifier = modifier)
+        1 -> Category()
+        2 -> Search()
+        3 -> Account()
+        4 -> Basket()
+    }
 }
+
