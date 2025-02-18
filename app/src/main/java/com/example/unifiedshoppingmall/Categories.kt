@@ -52,8 +52,12 @@ class CategoryItem(name : String, itemList: List<String>){
 }
 val fashion: CategoryItem = CategoryItem(name = "패션", itemList = listOf("여성패션", "남성패션", "남녀 공용 의류", "속옷 / 잠옷", "유아동패션"))
 val beauty: CategoryItem = CategoryItem(name = "뷰티", itemList = listOf("스킨케어", "클린/비건뷰티", "클렌징", "메이크업", "향수", "남성화장품", "네일", "뷰티소품", "어린이 화장품", "헤어", "바디", "선물세트 / 키트"))
+val baby: CategoryItem = CategoryItem(name = "출산/유아동", itemList = listOf("유아동패션", "기저귀", "물티슈", "분유/어린이식품", "어린이 건강식품","수유용품","이유용품/유아식기","매트/안전용품","유모차/웨건","카시트","아기띠/외출용품","욕실용품/스킨케어","위생/건강/세제","유아동침구","유아가구/인테리어","완구/교구","유아동도서","출산준비물/선물","임부/태교용품"))
+val foods: CategoryItem = CategoryItem(name = "식품", itemList = listOf("과일","견과/건과","채소","쌀/잡곡","축산/계란","수산물/건어물","생수/음료","커피/원두/차","과자/초콜릿/시리얼","면/통조림/가공식품","가루/조미료/오일","장/소스/드레싱/식초","유제품/아이스크림","냉장/냉동/간편요리","건강식품","분유/어린이식품","반찬/간편식/대용식"))
+val kitchen: CategoryItem = CategoryItem(name = "주방용품", itemList = listOf("냄비/프라이팬","주방조리도구","그릇/홈세트","수저/커트러리","컵/텀블러/와인용품","주전자/커피/티용품","주방수납/정리","밀폐저장/도시락","주방잡화","일회용품/종이컵","보온/보냉용품","1인가구 주방용품","주방가전"))
 
-val categoryItems: List<CategoryItem> = listOf(fashion,beauty)
+
+val categoryItems: List<CategoryItem> = listOf(fashion,beauty,baby,foods,kitchen)
 
 //data class CategoryItems(
 //    val fashion: List<String>
@@ -111,7 +115,7 @@ fun CategoryNotification(
         .padding(4.dp))
     {
         Text(
-            text = "카테고리 화면입니다. 원하는 상품 종류를 선택해 주세요.",
+            text = "카테고리 화면입니다. 원하는 상품 종류를 선택해 주세요. 왼쪽에서 상품 종류를 선택한 후 오른쪽에서 세부 품목을 선택해주세요.",
             modifier = Modifier
                 .border(
                     border = BorderStroke(
@@ -120,7 +124,7 @@ fun CategoryNotification(
                     shape = RoundedCornerShape(corner = CornerSize(20.dp))
                 )
                 .padding(6.dp),
-            fontSize = 30.sp,
+            fontSize = 25.sp,
             fontFamily = FontFamily(Font(R.font.main_bold)),
             color = Color.White
         )
@@ -151,7 +155,7 @@ fun leftList(
             text = item.name,
             color = Color.White,
             fontFamily = FontFamily(Font(R.font.main_bold)),
-            fontSize = 40.sp,
+            fontSize = 27.sp,
             modifier = Modifier
                 .fillMaxWidth()
                 .border(
@@ -199,7 +203,7 @@ fun rightList(
                     text = item,
                     color = Color.White,
                     fontFamily = FontFamily(Font(R.font.main_bold)),
-                    fontSize = 30.sp,
+                    fontSize = 23.sp,
                     modifier = Modifier
                         .fillMaxWidth()
                         .border(
