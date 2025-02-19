@@ -1,5 +1,7 @@
 package com.example.unifiedshoppingmall
 
+import SearchwithVocie
+import android.R.attr.fontFamily
 import android.R.attr.scaleX
 import android.R.attr.scaleY
 import android.R.attr.text
@@ -22,6 +24,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -170,14 +173,13 @@ fun Home(
         // Image to be displayed with pinch-to-zoom functionality
         Column(
             modifier = Modifier
-                .padding(all = 15.dp)
         ) {
             UpperNotification()
             Column(
                 modifier = Modifier
                     .verticalScroll(scrollState)
             ) {
-                SearchBar()
+                SearchwithVocie()
                 PopularProducts(modifier = Modifier, productList)
                 RecommendProducts(modifier = Modifier, productList)
             }
@@ -191,8 +193,7 @@ fun UpperNotification(
     modifier: Modifier = Modifier
 ){
     Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(4.dp))
+        .fillMaxWidth())
     {
         Text(
             text = "홈 화면 입니다. 인기 상품과 추천 상품을 조회할 수 있습니다.",
@@ -203,7 +204,7 @@ fun UpperNotification(
                     color = MainBlue),
                 shape = RoundedCornerShape(corner = CornerSize(20.dp))
             )
-                .padding(6.dp),
+                .padding(15.dp),
             fontSize = 30.sp,
             fontFamily = FontFamily(Font(R.font.main_bold)),
             color = Color.White
@@ -215,7 +216,7 @@ fun UpperNotification(
 fun SearchBar(){
     var text by remember { mutableStateOf("") }
 
-    OutlinedTextField(
+    TextField(
         value = text,
         onValueChange = { text = it},
         label = { Text(
@@ -225,20 +226,8 @@ fun SearchBar(){
         )},
         modifier = Modifier
             .fillMaxWidth()
-            .padding(
-                vertical = 2.dp,
-                horizontal = 6.dp
-            ),
-        colors = TextFieldDefaults.colors(
-            focusedIndicatorColor = MainBlue,
-            focusedPlaceholderColor = MainBlue,
-            focusedContainerColor = Color.White,
-            focusedTrailingIconColor = MainBlue,
-            unfocusedContainerColor = Color.White,
-            focusedSupportingTextColor = MainBlue,
-            focusedLabelColor = MainBlue
-        ),
-        textStyle = TextStyle.Default.copy(fontSize = 30.sp)
+            ,
+        textStyle = TextStyle.Default.copy(fontSize = 30.sp) // user type
     )
 }
 
@@ -250,7 +239,6 @@ fun PopularProducts(
     Column (modifier = Modifier
         .fillMaxWidth()
         .padding(
-            horizontal = 6.dp,
             vertical = 6.dp
         ),
     ){
@@ -306,7 +294,6 @@ fun RecommendProducts(
     Column (modifier = Modifier
         .fillMaxWidth()
         .padding(
-            horizontal = 6.dp,
             vertical = 6.dp
         ),
     ){

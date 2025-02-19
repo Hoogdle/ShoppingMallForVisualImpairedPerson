@@ -92,7 +92,7 @@ fun Category(
 
     Column(
         modifier = Modifier
-            .padding(15.dp)
+            .padding(vertical = 15.dp)
     ){
         CategoryNotification()
         Row(
@@ -112,7 +112,7 @@ fun CategoryNotification(
 ){
     Column(modifier = Modifier
         .fillMaxWidth()
-        .padding(4.dp))
+        .padding(vertical = 4.dp))
     {
         Text(
             text = "카테고리 화면입니다. 원하는 상품 종류를 선택해 주세요. 왼쪽에서 상품 종류를 선택한 후 오른쪽에서 세부 품목을 선택해주세요.",
@@ -123,7 +123,7 @@ fun CategoryNotification(
                         color = MainBlue),
                     shape = RoundedCornerShape(corner = CornerSize(20.dp))
                 )
-                .padding(6.dp),
+                .padding(15.dp),
             fontSize = 25.sp,
             fontFamily = FontFamily(Font(R.font.main_bold)),
             color = Color.White
@@ -147,7 +147,6 @@ fun leftList(
             .width(150.dp)
             .fillMaxHeight()
             .background(MainBlue)
-            .padding(0.dp)
     ) {
         itemsIndexed(categoryItems){
         index, item ->
@@ -194,7 +193,6 @@ fun rightList(
             .fillMaxHeight()
             .fillMaxWidth()
             .background(Color.Black)
-            .padding(0.dp)
     ) {
         itemsIndexed(categoryItems[item].itemList){
                 index, item ->

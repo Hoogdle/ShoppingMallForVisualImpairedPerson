@@ -1,11 +1,14 @@
 package com.example.unifiedshoppingmall
 
+import android.Manifest
 import android.R.attr.fontFamily
 import android.R.attr.label
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -24,6 +27,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,6 +58,9 @@ class MainActivity : ComponentActivity() {
             NavItem(label = "장바구니", icon = Icons.Default.ShoppingCart)
         )
         setContent {
+
+
+
             var selectedIndex by remember{
                 mutableStateOf(0)
             }
