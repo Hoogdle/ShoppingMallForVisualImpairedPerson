@@ -47,11 +47,24 @@ data class OrderedProduct(
     val number: Int
 )
 
+data class CanceledProduct(
+    val name: String,
+    val date: String,
+    val price: Int,
+    val number : Int
+)
+
 val OrderedProductList: List<OrderedProduct> = listOf(
     OrderedProduct(name = "삼성 무선 마우스 키보드 KBW-1234", eta = "배송완료, 1월 17일(금) 도착", price = 12560, number = 2),
     OrderedProduct(name = "애플 맥북 Pro M2", eta = "배송완료, 1월 30일(금) 도착", price = 2500000, number = 1),
     OrderedProduct(name = "애플망고 30개입 세트", eta = "배송중, 7월 21일(금) 도착", price = 24000, number = 2),
     )
+
+val CanceledProductList: List<CanceledProduct> = listOf(
+    CanceledProduct(name = "에어팟 블루투스 이어폰", date = "1월 2일(토)", price = 125000, number = 1),
+    CanceledProduct(name = "축구공 펌프", date = "1월 12일(토)", price = 5000, number = 2),
+    CanceledProduct(name = "Samsung 스마트 냉장고", date = "1월 21일(토)", price = 2500000, number = 1),
+)
 
 @Composable
 fun Account(){
@@ -64,6 +77,8 @@ fun Account(){
             composable("selectShoppingMall"){ InterfaceSetting(navController = navController)}
             composable("settingInterface"){ InterfaceSetting(navController = navController)}
             composable("OrderedList"){ OrderedList(navController = navController, itemList = OrderedProductList) }
+            composable("CanceledList"){ CanceledList(navController = navController, itemList = CanceledProductList) }
+            composable("CouponPage"){ CouponPage(navController = navController)}
         }
     }
 }
@@ -116,7 +131,7 @@ fun AccountFirstPage(
         Spacer(modifier = Modifier.height(8.dp))
         Button(
             onClick = {
-                navController.navigate("OrderedList")
+                navController.navigate("CanceledList")
             },
             colors = ButtonColors(
                 containerColor = MainBlue,
@@ -132,7 +147,7 @@ fun AccountFirstPage(
         Spacer(modifier = Modifier.height(8.dp))
         Button(
             onClick = {
-                navController.navigate("settingInterface")
+                navController.navigate("CouponPage")
             },
             colors = ButtonColors(
                 containerColor = MainBlue,
@@ -270,6 +285,36 @@ fun OrderedList(
     }
 }
 
+// Present Canceled List
+@Composable
+fun CanceledList(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    itemList: List<CanceledProduct>
+){
+    val text: String = "취소·반품·교환 목록입니다. 구매상태를 변경한 상품을 조회할 수 있습니다."
+
+    Column {
+        Spacer(modifier = Modifier
+            .height(10.dp))
+        Notification(text = text)
+        LazyColumn(
+            contentPadding = PaddingValues(bottom = 150.dp),
+            modifier = Modifier.fillMaxSize()){
+            items(itemList){
+                Spacer(modifier = Modifier
+                    .height(10.dp))
+                ItemOfCanceledList(
+                    productName = it.name,
+                    date = it.date,
+                    price = it.price,
+                    number = it.number
+                )
+            }
+        }
+    }
+}
+
 @Composable
 fun InterfaceSetting(
     modifier: Modifier = Modifier,
@@ -387,5 +432,130 @@ fun ItemOfOrderedList(
             }
         }
 
+    }
+}
+
+// CanceledList Template
+@Composable
+fun ItemOfCanceledList(
+    productName : String,
+    date: String,
+    price: Int,
+    number: Int
+){
+    var total = price * number
+    val formatPrice = "%,d".format(price)
+    val formatTotal = "%,d".format(total)
+    val canceledDate = "취소일자 : ${date}"
+    Column(modifier = Modifier
+        .border(width = 5.dp, color = MainBlue, shape = RectangleShape)){
+        AppText(
+            text = productName,
+            fontSize = 25.sp)
+        AppText(
+            text = date,
+            fontSize = 20.sp)
+        AppText(
+            text = "가격 : ${formatPrice}원 · ${number}개 (총 ${formatTotal}원)",
+            fontSize = 20.sp
+        )
+        Row(modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround){
+            Button(
+                shape = RectangleShape,
+                onClick = {},
+                colors = ButtonColors(
+                    containerColor = MainBlue,
+                    contentColor = Color.White,
+                    disabledContainerColor = MainBlue,
+                    disabledContentColor = Color.White),
+                modifier = Modifier
+                    .weight(1f)
+                    .height(50.dp)
+            ){
+                Text("상품정보")
+            }
+            Button(
+                shape = RectangleShape,
+                onClick = {},
+                colors = ButtonColors(
+                    containerColor = MainBlue,
+                    contentColor = Color.White,
+                    disabledContainerColor = MainBlue,
+                    disabledContentColor = Color.White),
+                modifier = Modifier
+                    .weight(1f)
+                    .height(50.dp)
+            ){
+                Text("취소정보")
+            }
+        }
+
+    }
+}
+
+@Composable
+fun CouponPage(
+    modifier: Modifier = Modifier,
+    navController: NavController
+){
+
+    val text = "쿠폰 화면입니다. 조회하고 싶은 쇼핑몰을 선택해주세요."
+    Column {
+        Spacer(
+            modifier = Modifier
+                .height(10.dp)
+        )
+        Notification(
+            text = text
+        )
+        Spacer(
+            modifier = Modifier
+                .height(10.dp)
+        )
+        Button(
+            onClick = {
+            },
+            colors = ButtonColors(
+                containerColor = MainBlue,
+                contentColor = Color.White,
+                disabledContainerColor = MainBlue,
+                disabledContentColor = Color.White
+            ),
+            shape = RectangleShape,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            AppText(text = "쿠팡(활성화)")
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = {
+            },
+            colors = ButtonColors(
+                containerColor = MainBlue,
+                contentColor = Color.White,
+                disabledContainerColor = MainBlue,
+                disabledContentColor = Color.White
+            ),
+            shape = RectangleShape,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            AppText(text = "네이버쇼핑(비활성화)")
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = {
+            },
+            colors = ButtonColors(
+                containerColor = MainBlue,
+                contentColor = Color.White,
+                disabledContainerColor = MainBlue,
+                disabledContentColor = Color.White
+            ),
+            shape = RectangleShape,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            AppText(text = "G마켓(비활성화)")
+        }
     }
 }
