@@ -1,14 +1,23 @@
 package com.example.unifiedshoppingmall
 
+import android.R.attr.bottom
+import android.R.attr.onClick
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.OutlinedTextFieldDefaults.contentPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -69,7 +78,7 @@ fun Basket(){
 
     Column {
         NavHost(navController = navController, startDestination = "screen1") {
-            composable("screen1"){ BasketFirstPage(navController = navController)}
+            composable("screen1"){ BasketFirstPage(navController = navController, itemList = BasketItems)}
         }
     }
 }
@@ -77,65 +86,58 @@ fun Basket(){
 @Composable
 fun BasketFirstPage(
     modifier: Modifier = Modifier,
-    navController: NavController
+    navController: NavController,
+    itemList : List<BasketProduct>
 ){
-    val text: String = "장바구니 화면입니다. 장바구니에 담긴 상품들을 조회할 수 있습니다. 결제를 원하시면 최하단의 결제하기 버튼을 눌러주세요."
+    val text: String = "장바구니 화면입니다. 장바구니에 담긴 상품들을 조회할 수 있습니다. 결제를 원하시면 아래의 결제하기 버튼을 눌러주세요."
+    var total: Int = 0
 
-    Column {
-        Spacer(
+    for (item in itemList){
+        total += item.price * item.num
+    }
+
+    val totalString:String = "%,d".format(total)
+    Column(modifier = Modifier.fillMaxSize()) {
+        Spacer(modifier = Modifier
+            .height(10.dp))
+        Notification(text = text)
+        Button(
+            onClick = {
+            },
+            colors = ButtonColors(
+                containerColor = MainBlue,
+                contentColor = Color.White,
+                disabledContainerColor = MainBlue,
+                disabledContentColor = Color.White
+            ),
+            shape = RectangleShape,
             modifier = Modifier
-                .height(10.dp)
-        )
-        Notification(
-            text = text
-        )
-        Spacer(
-            modifier = Modifier
-                .height(10.dp)
-        )
-        Button(
-            onClick = {
-            },
-            colors = ButtonColors(
-                containerColor = MainBlue,
-                contentColor = Color.White,
-                disabledContainerColor = MainBlue,
-                disabledContentColor = Color.White
-            ),
-            shape = RectangleShape,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            AppText(text = "계정등록")
+                .fillMaxWidth()
+        ){
+            AppText(text = "${totalString}원 결제하기")
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(
-            onClick = {
-            },
-            colors = ButtonColors(
-                containerColor = MainBlue,
-                contentColor = Color.White,
-                disabledContainerColor = MainBlue,
-                disabledContentColor = Color.White
-            ),
-            shape = RectangleShape,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            AppText(text = "주문목록")
+        Box(modifier = Modifier.weight(0.9f)){
+            LazyColumn(
+                contentPadding = PaddingValues(bottom = 150.dp),
+                modifier = Modifier
+                    .fillMaxSize()){
+                items(itemList){
+                    Spacer(modifier = Modifier
+                        .height(10.dp))
+                    ItemOfBasket(
+                        name = it.name,
+                        option = it.option,
+                        shop = it.shop,
+                        score = it.score,
+                        price = it.price,
+                        num = it.num,
+                        eta = it.eta
+                    )
+                }
+            }
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(
-            onClick = {
-            },
-            colors = ButtonColors(
-                containerColor = MainBlue,
-                contentColor = Color.White,
-                disabledContainerColor = MainBlue,
-                disabledContentColor = Color.White
-            ),
-            shape = RectangleShape,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            AppText(text = "취소·반품·교환 목록")
+        Box(modifier = Modifier.weight(0.1f)){
+
         }
     }
 }
@@ -145,7 +147,7 @@ fun BasketFirstPage(
 @Composable
 fun ItemOfBasket(
     name: String,
-    option: String,
+    option: String = "",
     shop: String,
     score: String,
     price: Int,
@@ -160,14 +162,53 @@ fun ItemOfBasket(
         .border(width = 5.dp, color = MainBlue, shape = RectangleShape)){
         AppText(
             text = name,
-            fontSize = 25.sp)
+            fontSize = 30.sp,
+            modifier = Modifier.padding(
+                horizontal = 15.dp,
+                vertical = 15.dp
+            )
+        )
+        AppText(
+            text = "옵션 : ${option}",
+            fontSize = 20.sp,
+            modifier = Modifier.padding(
+                horizontal = 15.dp,
+                vertical = 5.dp
+            )
+        )
+        AppText(
+            text = "구매처 : ${shop}",
+            fontSize = 20.sp,
+            modifier = Modifier.padding(
+                horizontal = 15.dp,
+                vertical = 5.dp
+            )
+        )
+        AppText(
+            text = "평점 : ${score}",
+            fontSize = 20.sp,
+            modifier = Modifier.padding(
+                horizontal = 15.dp,
+                vertical = 5.dp
+            )
+        )
         AppText(
             text = eta,
-            fontSize = 20.sp)
+            fontSize = 20.sp,
+            modifier = Modifier.padding(
+                horizontal = 15.dp,
+                vertical = 5.dp
+            )
+        )
         AppText(
             text = "가격 : ${formatPrice}원 · ${num}개 (총 ${formatTotal}원)",
-            fontSize = 20.sp
+            fontSize = 20.sp,
+            modifier = Modifier.padding(
+                horizontal = 15.dp,
+                vertical = 5.dp
+            )
         )
+        Spacer(modifier = Modifier.height(5.dp))
         Row(modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround){
             Button(
@@ -196,7 +237,7 @@ fun ItemOfBasket(
                     .weight(1f)
                     .height(50.dp)
             ){
-                Text("교환·반품")
+                Text("개수변경")
             }
             Button(
                 shape = RectangleShape,
@@ -210,7 +251,7 @@ fun ItemOfBasket(
                     .weight(1f)
                     .height(50.dp)
             ){
-                Text("배송조회")
+                Text("취소")
             }
         }
 
